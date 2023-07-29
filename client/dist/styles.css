@@ -1,0 +1,12 @@
+body {
+  background-color: #89CFF0;
+}
+.loginPage {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  max-width: 50%;
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+}
