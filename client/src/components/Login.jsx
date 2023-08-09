@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-function Login () {
-  const [user, setUser] = React.useState('');
+function Login ({ user, setUser }) {
+  // const [user, setUser] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [hashPw, setHashPw] = React.useState('');
   const navigate = useNavigate();
