@@ -7,11 +7,13 @@ import NotFound from './components/NotFound'
 export default function App () {
   const [user, setUser] = React.useState('');
   const navigate = useNavigate();
+
   React.useEffect(() => {
     if (!user) {
       return navigate('/')
     }
   }, [user])
+
   return (
     <Routes>
       <Route path="/" element={<Login user={user} setUser={setUser}/>}/>
