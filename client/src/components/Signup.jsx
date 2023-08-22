@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 function Signup () {
   const [newUser, setNewUser] = React.useState('');
@@ -29,7 +30,9 @@ function Signup () {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password1 === password2 && newUser !== '') {
-      console.log('SUBMITTED')
+      return axios.post('/submitUser', {user: newUser, password: password1})
+        .then(() => {console.log('SUBMITTED')})
+        .catch((err) => {console.log('NEW USER ERR: ', err)})
     } else {
       console.log('OOPS')
     }
