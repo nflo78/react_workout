@@ -27,7 +27,7 @@ module.exports = {
 
     return dbPool.query(queryString)
       .then(() => res.sendStatus(201))
-      .catch((err) => {console.log('CONTROLLER ERROR: ', err)})
+      .catch((err) => {console.log('CONTROLLER ERROR: ', err); res.send(err)})
   },
 
   // getUser: (req, res) => {
