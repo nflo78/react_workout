@@ -15,6 +15,7 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 app.use(router);
 
 //added access and refresh token
+// added json web token dependency
 const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server available at http://localhost:${PORT}`);
