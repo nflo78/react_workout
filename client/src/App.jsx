@@ -1,18 +1,20 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Home from './components/Home'
 import Login from './components/Login'
 import Signup from './components/Signup'
 import NotFound from './components/NotFound'
 export default function App () {
-  const [user, setUser] = React.useState('');
+  const [user, setUser] = useState('')
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    if (!user) {
-      return navigate('/')
-    }
-  }, [user])
+  // const handleRefresh = async () => {
+  //   if (document.cookie) {
+  //     await setUser(document.cookie.substring('workoutv1='.length))
+  //     navigate("/home")
+  //   }
+  // }
+  // useEffect(() => {handleRefresh()}, [])
 
   return (
     <Routes>

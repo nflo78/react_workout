@@ -46,16 +46,16 @@ function Signup () {
       return axios.post('/submitUser', {user: newUser, password: password1})
         .then((result) => {
           console.log('SUBMITTED: ', result)
-          if (result.data.detail && result.data.detail === `Key (user_name)=(${newUser}) already exists.`) {
-            setDupUser(true)
-            console.log('DUPLICATE USER')
-          } else {
             setDupUser(false);
             setUserCreated(true);
-            setTimeout(() => {navigate('/')}, 1000);
-          }
+            setTimeout(() => {navigate('/')}, 2000);
         })
-        .catch((err) => {console.log('NEW USER ERR: ', err)})
+        .catch((err) => {
+          console.log('NEW USER ERR: ', err)
+          if (err.response.status === 409) {
+            setDupUser(true);
+          }
+      })
     }
   }
 

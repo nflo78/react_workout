@@ -1,24 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-function Login ({ user, setUser }) {
-  // const [user, setUser] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [hashPw, setHashPw] = React.useState('');
+import axios from 'axios';
+
+function Login ({user, setUser}) {
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [hashPw, setHashPw] = useState('');
   const navigate = useNavigate();
 
-  const logUser = (e) => {
-    setUser(e.target.value)
+  const handleName = (e) => {
+    setName(e.target.value)
   }
 
-  const checkUser = () => {
-    if (user === 'me') {
-      navigate('/home');
-    }
+  const checkUser = (e) => {
+    e.preventDefault();
+    return axios.post('/login', {user: name, password: hashPw})
+      .then((result) => {
+        console.log('SUCCESFUL LOGIN: ', result)
+        console.log('HERE COOKIE: ', document.cookie)
+        setUser(name)
+      })
+      .then(() => navigate("/home"))
+      .catch((err) => {console.log('LOGIN ERROR :', err)})
   }
   const signup = () => {
     navigate('/signup')
   }
-  function hashCode(e) {
+  function handlePw(e) {
     let hash = 0;
     for (let i = 0, len = e.target.value.length; i < len; i++) {
         let chr = e.target.value.charCodeAt(i);
@@ -32,12 +40,14 @@ function Login ({ user, setUser }) {
   return (
     <>
       <div className='loginPage'>
-      <h2> Workout </h2>
-        <input type='text' placeholder='User' onChange={logUser}></input>
-        <input type='text' placeholder='Password' onChange={hashCode}></input>
-        <button onClick={checkUser}>
-          Go!
-        </button>
+        <h2> Workout </h2>
+        <form onSubmit={checkUser}>
+          <input type='text' placeholder='User' onChange={handleName}></input>
+            <input type='text' placeholder='Password' onChange={handlePw}></input>
+            <button>
+              Login
+            </button>
+        </form>
         <button onClick={signup}>
           Sign up
         </button>
@@ -45,7 +55,10 @@ function Login ({ user, setUser }) {
           {`HASHED PW ${hashPw}`}
         </div>
         <div>
-          {typeof hashPw}
+          {`NAME :${name}`}
+        </div>
+        <div>
+          {`USER : ${user}`}
         </div>
       </div>
     </>

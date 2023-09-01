@@ -1,8 +1,8 @@
 import React from 'react';
-import Session from './Session'
+// import Session from './Session'
 import { Link, useNavigate, redirect } from 'react-router-dom';
 
-function Home ({ user }) {
+function Home ({user, setUser}) {
 
   // const navigate = useNavigate();
   // React.useEffect(() => {
@@ -12,9 +12,7 @@ function Home ({ user }) {
   // }, [user])
   return (
     <div>
-      Home!
-      {user === '' && 'yes'}
-      <Session/>
+      {`Welcome ${user}!`}
     </div>
   )
 }
