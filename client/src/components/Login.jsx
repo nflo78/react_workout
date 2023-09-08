@@ -1,24 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-function Login ({ user, setUser }) {
-  // const [user, setUser] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [hashPw, setHashPw] = React.useState('');
+import axios from 'axios';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+
+function Login ({user, setUser}) {
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [hashPw, setHashPw] = useState('');
   const navigate = useNavigate();
 
-  const logUser = (e) => {
-    setUser(e.target.value)
+  const handleName = (e) => {
+    setName(e.target.value)
   }
 
-  const checkUser = () => {
-    if (user === 'me') {
-      navigate('/home');
-    }
+  const handleLogin = (e) => {
+    e.preventDefault();
+    return axios.post('/login', {user: name, password: hashPw})
+      .then((result) => {
+        console.log('SUCCESFUL LOGIN: ', result)
+        console.log('HERE COOKIE: ', document.cookie)
+        setUser(name)
+      })
+      .then(() => navigate("/home"))
+      .catch((err) => {console.log('LOGIN ERROR :', err)})
   }
   const signup = () => {
     navigate('/signup')
   }
-  function hashCode(e) {
+  function handlePw(e) {
     let hash = 0;
     for (let i = 0, len = e.target.value.length; i < len; i++) {
         let chr = e.target.value.charCodeAt(i);
@@ -32,20 +42,27 @@ function Login ({ user, setUser }) {
   return (
     <>
       <div className='loginPage'>
-      <h2> Workout </h2>
-        <input type='text' placeholder='User' onChange={logUser}></input>
-        <input type='text' placeholder='Password' onChange={hashCode}></input>
-        <button onClick={checkUser}>
-          Go!
-        </button>
-        <button onClick={signup}>
+        <h2> Workout </h2>
+        <form onSubmit={handleLogin}>
+          <TextField label="Username" onChange={handleName}></TextField>
+          <TextField label="Password" type="password" onChange={handlePw}></TextField>
+          {/* <input type='text' placeholder='User' onChange={handleName}></input>
+          <input type='text' placeholder='Password' onChange={handlePw}></input> */}
+          <Button type="submit" variant="contained">
+            Login
+          </Button>
+        </form>
+        <Button variant="contained" onClick={signup}>
           Sign up
-        </button>
+        </Button>
         <div>
           {`HASHED PW ${hashPw}`}
         </div>
         <div>
-          {typeof hashPw}
+          {`NAME :${name}`}
+        </div>
+        <div>
+          {`USER : ${user}`}
         </div>
       </div>
     </>
