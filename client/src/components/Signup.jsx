@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 function Signup () {
   const [newUser, setNewUser] = React.useState('');
@@ -62,10 +64,14 @@ function Signup () {
   return (
     <form className='signup' onSubmit={(e) => {handleSubmit(e); }}>
       <div> New User </div>
-      <input type='text' placeholder='username' onChange={handleNewUser}></input>
+      <TextField label="Username" onChange={handleNewUser}></TextField>
+      <TextField label="Password" type="password" onChange={handlePass1}></TextField>
+      <TextField label="Confirm Password" type="password" onChange={handlePass2}></TextField>
+      <Button type="submit" variant="contained">Sign Up!</Button>
+      {/* <input type='text' placeholder='username' onChange={handleNewUser}></input>
       <input type='text' placeholder='password' onChange={handlePass1}></input>
-      <input type='text' placeholder='confirm password' onChange={handlePass2}></input>
-      <button>Sign up!</button>
+      <input type='text' placeholder='confirm password' onChange={handlePass2}></input> */}
+      {/* <button>Sign up!</button> */}
       <div>{userCreated && 'Account created successfully!'}</div>
       <div>{dupUser && `Username already exists`}</div>
       <div>{diffPw && 'Passwords must be the same'}</div>

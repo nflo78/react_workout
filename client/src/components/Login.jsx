@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 function Login ({user, setUser}) {
   const [name, setName] = useState('');
@@ -12,7 +14,7 @@ function Login ({user, setUser}) {
     setName(e.target.value)
   }
 
-  const checkUser = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     return axios.post('/login', {user: name, password: hashPw})
       .then((result) => {
@@ -41,16 +43,18 @@ function Login ({user, setUser}) {
     <>
       <div className='loginPage'>
         <h2> Workout </h2>
-        <form onSubmit={checkUser}>
-          <input type='text' placeholder='User' onChange={handleName}></input>
-            <input type='text' placeholder='Password' onChange={handlePw}></input>
-            <button>
-              Login
-            </button>
+        <form onSubmit={handleLogin}>
+          <TextField label="Username" onChange={handleName}></TextField>
+          <TextField label="Password" type="password" onChange={handlePw}></TextField>
+          {/* <input type='text' placeholder='User' onChange={handleName}></input>
+          <input type='text' placeholder='Password' onChange={handlePw}></input> */}
+          <Button type="submit" variant="contained">
+            Login
+          </Button>
         </form>
-        <button onClick={signup}>
+        <Button variant="contained" onClick={signup}>
           Sign up
-        </button>
+        </Button>
         <div>
           {`HASHED PW ${hashPw}`}
         </div>
