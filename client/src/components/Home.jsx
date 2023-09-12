@@ -1,7 +1,7 @@
 import React from 'react';
 // import Session from './Session'
 import { Link, useNavigate, redirect } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import { Box, Button, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
 
 function Home ({user, setUser}) {
 
@@ -19,10 +19,20 @@ function Home ({user, setUser}) {
     navigate('/');
   }
   return (
-    <div>
-      {`Welcome ${user}!`}
-      <Button onClick={handleLogout}>Logout</Button>
-    </div>
+    <Box
+      sx={{ flexGrow: 1 }}
+    >
+      <AppBar position="static">
+        <Toolbar>
+          <Typography component="div" sx={{ flexGrow: 1, mr: 2}}>
+            {`Welcome ${user}`}
+          </Typography>
+          <Button sx={{ right: "0%" }} color="inherit" onClick={handleLogout}>
+            Logout
+          </Button>
+        </Toolbar>
+      </AppBar>
+    </Box>
   )
 }
 
