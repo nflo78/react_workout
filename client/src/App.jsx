@@ -8,13 +8,13 @@ export default function App () {
   const [user, setUser] = useState('')
   const navigate = useNavigate();
 
-  // const handleRefresh = async () => {
-  //   if (document.cookie) {
-  //     await setUser(document.cookie.substring('workoutv1='.length))
-  //     navigate("/home")
-  //   }
-  // }
-  // useEffect(() => {handleRefresh()}, [])
+  const handleRefresh = async () => {
+    if (document.cookie) {
+      await setUser(document.cookie.substring('workoutv1='.length))
+      navigate("/home")
+    }
+  }
+  useEffect(() => {handleRefresh()}, [])
 
   return (
     <Routes>
