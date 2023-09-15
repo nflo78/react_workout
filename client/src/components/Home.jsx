@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Calendar from './Calendar'
 import { Link, useNavigate, redirect } from 'react-router-dom';
 import { Box, Button, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
+import axios from 'axios';
 
 function Home ({user, setUser}) {
   const [day, setDay] = useState(new Date().toDateString())
@@ -17,6 +18,13 @@ function Home ({user, setUser}) {
     document.cookie = "workoutv1= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
     await setUser('');
     navigate('/');
+  }
+
+  const testCheck = (e) => {
+    e.preventDefault();
+    return axios.get('/test')
+      .then((result) => console.log('TEST RESULT: ', result.data))
+      .catch((err) => console.log('ERROR TEST: ', err))
   }
   return (
     <>
@@ -38,6 +46,11 @@ function Home ({user, setUser}) {
         <div>{`The Date is ${new Date().toDateString()}`}</div>
         <div>{`Calendar date is ${new Date(day).toDateString()}`}</div>
         <Calendar setDay={setDay}/>
+        <div>
+          <Button onClick={testCheck}>
+            Test
+          </Button>
+        </div>
       </Box>
     </>
   )
