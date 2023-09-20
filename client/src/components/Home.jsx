@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import Calendar from './Calendar'
 import { Link, useNavigate, redirect } from 'react-router-dom';
-import { Box, Button, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
+import { Box, Button, AppBar, Toolbar, IconButton, Typography, TextField } from '@mui/material';
 import axios from 'axios';
 
 function Home ({user, setUser}) {
   const [day, setDay] = useState(new Date().toDateString())
+  const [newSplit, setNewSplit] = useState('')
   const navigate = useNavigate();
   // React.useEffect(() => {
   //   if (!user) {
@@ -20,12 +21,24 @@ function Home ({user, setUser}) {
     navigate('/');
   }
 
-  const testCheck = (e) => {
-    e.preventDefault();
-    return axios.get('/test')
-      .then((result) => console.log('TEST RESULT: ', result.data))
-      .catch((err) => console.log('ERROR TEST: ', err))
+  const handleNewSplit = (e) => {
+    setNewSplit(e.target.value)
   }
+
+  const submitSplit = (e) => {
+    e.preventDefault();
+    if (newSplit !== '') {
+      return axios.post('/newsplit', {newsplit: newSplit, user: user})
+        .then((result) => {console.log('NEW SPLIT SUBMITTED')})
+        .catch((err) => {console.log('NEW SPLUT ERR: ', err)})
+    }
+  }
+  // const testCheck = (e) => {
+  //   e.preventDefault();
+  //   return axios.get('/test')
+  //     .then((result) => console.log('TEST RESULT: ', result.data))
+  //     .catch((err) => console.log('ERROR TEST: ', err))
+  // }
   return (
     <>
       <Box
@@ -46,10 +59,16 @@ function Home ({user, setUser}) {
         <div>{`The Date is ${new Date().toDateString()}`}</div>
         <div>{`Calendar date is ${new Date(day).toDateString()}`}</div>
         <Calendar setDay={setDay}/>
-        <div>
+        {/* <div>
           <Button onClick={testCheck}>
             Test
           </Button>
+        </div> */}
+        <div>
+          <TextField label="Split Name" onChange={handleNewSplit}>
+          </TextField>
+          <div>{`New split: ${newSplit}`}</div>
+          <Button onClick={submitSplit}>SUBMIT SPLIT</Button>
         </div>
       </Box>
     </>

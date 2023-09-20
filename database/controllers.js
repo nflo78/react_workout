@@ -13,7 +13,7 @@ dbPool.connect();
 module.exports = {
   signUpUser: (req, res) => {
 
-    const queryString = `INSERT INTO userlist(user_name, hashpw) VALUES('${req.body.user}', '${req.body.password}')`
+    const queryString = `INSERT INTO users(name, password) VALUES('${req.body.user}', '${req.body.password}')`
 
     return dbPool.query(queryString)
       .then(() => res.sendStatus(201))
@@ -34,14 +34,14 @@ module.exports = {
   loginUser: (req, res) => {
     console.log('LOGIN CONTROLLER: ', req.body)
 
-    const queryString = `SELECT hashpw FROM userlist WHERE user_name = '${req.body.user}'`
+    const queryString = `SELECT password FROM users WHERE name = '${req.body.user}'`
 
     return dbPool.query(queryString)
       .then((result) => {
         if (!result.rows[0]) {
           return res.sendStatus(401)
         }
-        const userPw = Number(result.rows[0].hashpw) || 'Invalid'
+        const userPw = Number(result.rows[0].password) || 'Invalid'
         if (userPw === req.body.password) {
           res.cookie('workoutv1', req.body.user, { maxAge: 60 * 1000 * 30} )
           res.sendStatus(201);
@@ -66,9 +66,18 @@ module.exports = {
     //   .catch((err) => {console.log('LOGIN USER ERROR: ', err)})
   },
 
-  testController: (req, res) => {
-    return dbPool.query('SELECT * FROM userlist')
-      .then((result) => res.send(result.rows))
-      .catch((err) => res.send('ERROR TEST'))
+  submitSplit: (req, res) => {
+    const queryString = `WITH split_insert AS (SELECT id FROM users WHERE name = '${req.body.user}')
+    INSERT INTO splits(user_id, name) VALUES((SELECT id FROM split_insert), '${req.body.newsplit}')`
+
+    return dbPool.query(queryString)
+      .then(() => {console.log('DB RECEIVED NEW SPLIT')})
+      .catch((err) => {console.log('DB NEW SPLITERR: ', err)})
   }
+
+  // testController: (req, res) => {
+  //   return dbPool.query('SELECT * FROM userlist')
+  //     .then((result) => res.send(result.rows))
+  //     .catch((err) => res.send('ERROR TEST'))
+  // }
 }
