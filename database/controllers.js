@@ -73,11 +73,15 @@ module.exports = {
     return dbPool.query(queryString)
       .then(() => {console.log('DB RECEIVED NEW SPLIT')})
       .catch((err) => {console.log('DB NEW SPLITERR: ', err)})
-  }
+  },
 
-  // testController: (req, res) => {
-  //   return dbPool.query('SELECT * FROM userlist')
-  //     .then((result) => res.send(result.rows))
-  //     .catch((err) => res.send('ERROR TEST'))
-  // }
+  getInfo: (req, res) => {
+    console.log('USER!: ', req.body.user)
+    const queryString = `WITH user_name AS (SELECT id FROM users WHERE name = '${req.body.user}')
+    SELECT name FROM splits WHERE user_id = (SELECT id FROM user_name)`
+
+    return dbPool.query(queryString)
+      .then((result) => res.send(result.rows))
+      .catch((err) => {console.log('GET INFO ERR: ', err)})
+  }
 }
