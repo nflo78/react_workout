@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Button, TextField } from '@mui/material';
+import axios from 'axios';
 
-function Splits () {
+function Splits ({ user }) {
 
   const [newSplit, setNewSplit] = useState('')
 
@@ -20,11 +21,11 @@ function Splits () {
 
   return (
     <div>
-    <TextField label="Split Name" onChange={handleNewSplit}>
-    </TextField>
-    <div>{`New split: ${newSplit}`}</div>
-    <Button onClick={submitSplit}>SUBMIT SPLIT</Button>
-  </div>
+      <TextField label="Split Name" onChange={handleNewSplit}>
+      </TextField>
+      <div>{`New split: ${newSplit}`}</div>
+      <Button onClick={submitSplit}>SUBMIT SPLIT</Button>
+    </div>
   )
 }
 

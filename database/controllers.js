@@ -76,12 +76,21 @@ module.exports = {
   },
 
   getInfo: (req, res) => {
-    console.log('USER!: ', req.body.user)
+    // console.log('USER!: ', req.body.user)
     const queryString = `WITH user_name AS (SELECT id FROM users WHERE name = '${req.body.user}')
     SELECT name FROM splits WHERE user_id = (SELECT id FROM user_name)`
 
     return dbPool.query(queryString)
       .then((result) => res.send(result.rows))
       .catch((err) => {console.log('GET INFO ERR: ', err)})
-  }
+  },
+
+  newExercise: (req, res) => {
+    const queryString = `WITH exercise_insert AS (SELECT id FROM users WHERE name = '${req.body.user}')
+    INSERT INTO exercises(user_id, name) VALUES((SELECT id FROM exercise_insert), '${req.body.exercise}')`
+
+    return dbPool.query(queryString)
+      .then(() => {console.log('DB RECEIVED NEW EXERCISE')})
+      .catch((err) => {console.log('DB NEW EXERCISE ERR: ', err)})
+  },
 }

@@ -27,11 +27,19 @@ CREATE TABLE IF NOT EXISTS workouts (
 
 CREATE TABLE IF NOT EXISTS exercises (
   id SERIAL PRIMARY KEY,
-  workout_id INT,
   name VARCHAR(30),
+  user_id INT,
   parameter VARCHAR(10),
-  FOREIGN KEY (workout_id) REFERENCES workouts(id)
+  FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+-- CREATE TABLE IF NOT EXISTS exercises (
+--   id SERIAL PRIMARY KEY,
+--   workout_id INT,
+--   name VARCHAR(30),
+--   parameter VARCHAR(10),
+--   FOREIGN KEY (workout_id) REFERENCES workouts(id)
+-- );
 
 CREATE TABLE IF NOT EXISTS sets (
   id SERIAL PRIMARY KEY,

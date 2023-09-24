@@ -64,10 +64,10 @@ function Home ( {user, setUser} ) {
         <Calendar setDay={setDay}/>
       </Box>
       <Box>
-        <Splits/>
+        <Splits user={user}/>
       </Box>
       <Box>
-        <Session allSplits={allSplits}/>
+        <Session user={user} allSplits={allSplits}/>
       </Box>
     </>
   )
