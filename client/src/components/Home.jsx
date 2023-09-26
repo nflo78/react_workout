@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Calendar from './Calendar';
 import Splits from './Splits';
 import Session from './Session';
+import NewExercise from './NewExercise';
 import { Link, useNavigate, redirect } from 'react-router-dom';
 import { Box, Button, AppBar, Toolbar, IconButton, Typography, TextField } from '@mui/material';
 import axios from 'axios';
@@ -65,6 +66,9 @@ function Home ( {user, setUser} ) {
       </Box>
       <Box>
         <Splits user={user}/>
+      </Box>
+      <Box>
+        <NewExercise user={user}/>
       </Box>
       <Box>
         <Session user={user} allSplits={allSplits}/>
