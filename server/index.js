@@ -9,11 +9,11 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
+app.use(router);
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 })
-app.use(router);
-
 //added access and refresh token
 // added json web token dependency
 const PORT = process.env.PORT
