@@ -75,14 +75,17 @@ module.exports = {
       .catch((err) => {console.log('DB NEW SPLITERR: ', err)})
   },
 
-  getInfo: (req, res) => {
+  getInfo: async (req, res) => {
     // console.log('USER!: ', req.body.user)
-    const queryString = `WITH user_name AS (SELECT id FROM users WHERE name = '${req.body.user}')
-    SELECT name FROM splits WHERE user_id = (SELECT id FROM user_name)`
+    // const queryString = `WITH user_name AS (SELECT id FROM users WHERE name = '${req.body.user}')
+    // SELECT name FROM splits WHERE user_id = (SELECT id FROM user_name)`;
 
-    return dbPool.query(queryString)
-      .then((result) => res.send(result.rows))
-      .catch((err) => {console.log('GET INFO ERR: ', err)})
+    const userSplits = await dbPool.query(`WITH user_name AS (SELECT id FROM users WHERE name = '${req.body.user}')
+    SELECT name FROM splits WHERE user_id = (SELECT id FROM user_name)`);
+    const userExercises = await dbPool.query(`WITH user_name AS (SELECT id FROM users where NAME = '${req.body.user}')
+    SELECT name FROM exercises WHERE user_id = (SELECT id FROM user_name)`);
+
+    res.send({splits: userSplits.rows, exercises: userExercises.rows });
   },
 
   newExercise: (req, res) => {

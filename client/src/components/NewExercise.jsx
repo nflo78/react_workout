@@ -1,26 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+// eslint-disable-next-line
 import { Box, Button, TextField, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import axios from 'axios';
-
-function NewExercise ({ user }) {
-  const [newExercise, setNewExercise] = useState('');
-
-  const handleNewExercise = (e) => {
-    setNewExercise(e.target.value)
-  }
-
-  const submitNewExercise = (e) => {
+import NewSet from './NewSet';
+function NewExercise({ user, allExercises }) {
+  const [currentExercise, setCurrentExercise] = useState('');
+  const handleExerciseChange = (e) => {
+    setCurrentExercise(e.target.value);
+  };
+  const [sets, setSets] = useState([1]);
+  const handleNewSet = (e) => {
     e.preventDefault();
-    return axios.post('/newexercise', {user: user, exercise: newExercise})
-      .then(() => { console.log('NEW EXERCISE SUBMITTED!') })
-      .catch((err) => { console.log('NEW EXERCISE SUBMISSION ERR: ', err) })
+    setSets(sets.concat([sets.length + 1]))
   }
   return (
-    <FormControl style={{width: "50vw"}}>
-      <TextField label={`Add Your Exercises`} onChange={handleNewExercise}/>
-      <Button onClick={submitNewExercise}>Add Exercise</Button>
-    </FormControl>
-  )
+    <>
+      <InputLabel>Exercise</InputLabel>
+      <Select
+        value={currentExercise}
+        // label="loooooooooong"
+        onChange={handleExerciseChange}
+      >
+        {allExercises && allExercises.map((exercise) => (
+          <MenuItem key={exercise} value={exercise}>{exercise}</MenuItem>
+        ))}
+      </Select>
+      <div>
+        {currentExercise && sets.map((set) => <NewSet key={set} />)}
+      </div>
+      <Button onClick={handleNewSet}>Add New Set</Button>
+    </>
+  );
 }
 
 export default NewExercise;
