@@ -3,20 +3,21 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, redirect } from 'react-router-dom';
 /* eslint-disable */
 import {
-  Box, Button, AppBar, Toolbar, IconButton, Typography, TextField
+  Box, Button, AppBar, Toolbar, IconButton, Typography, TextField, Menu, MenuItem
 } from '@mui/material';
 /* eslint-enable */
 import axios from 'axios';
 import Calendar from './Calendar';
+import HomeBar from './HomeBar';
 import Splits from './Splits';
 import Session from './Session';
 import NewExercise from './NewExercise';
 
-function Home({ user, setUser }) {
+function Home({ user, setUser, allSplits, setAllSplits, allExercises, setAllExercises }) {
   const [day, setDay] = useState(new Date().toDateString());
   const navigate = useNavigate();
-  const [allSplits, setAllSplits] = useState([]);
-  const [allExercises, setAllExercises] = useState([]);
+  // const [allSplits, setAllSplits] = useState([]);
+  // const [allExercises, setAllExercises] = useState([]);
   // React.useEffect(() => {
   //   if (!user) {
   //     return navigate('/')
@@ -49,28 +50,19 @@ function Home({ user, setUser }) {
   return (
     <>
       <Box>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography component="div" sx={{ flexGrow: 1, mr: 2 }}>
-              {`Welcome ${user}`}
-            </Typography>
-            <Button sx={{ right: '0%' }} color="inherit" onClick={handleLogout}>
-              Logout
-            </Button>
-          </Toolbar>
-        </AppBar>
+        <HomeBar user={user} setUser={setUser} />
       </Box>
       <Box>
         <div>{`The Date is ${new Date().toDateString()}`}</div>
         <div>{`Calendar date is ${new Date(day).toDateString()}`}</div>
         <Calendar setDay={setDay} />
       </Box>
-      <Box>
+      {/* <Box>
         <Splits user={user} />
-      </Box>
-      <Box>
+      </Box> */}
+      {/* <Box>
         <Session user={user} allSplits={allSplits} allExercises={allExercises} />
-      </Box>
+      </Box> */}
     </>
   );
 }

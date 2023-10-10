@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import axios from 'axios';
-
-function Splits({ user }) {
+import HomeBar from './HomeBar';
+function Splits({ user, setUser }) {
   const [newSplit, setNewSplit] = useState('');
   const [newExercise, setNewExercise] = useState('');
 
@@ -31,14 +31,19 @@ function Splits({ user }) {
   };
 
   return (
-    <div>
-      <TextField label="Split Name" onChange={handleNewSplit} />
-      <div>{`New split: ${newSplit}`}</div>
-      <Button onClick={submitSplit}>SUBMIT SPLIT</Button>
-      <TextField label="Exercise Name" onChange={handleNewExercise} />
-      <div>{`New exercise: ${newExercise}`}</div>
-      <Button onClick={submitExercise}>SUBMIT EXERCISE</Button>
-    </div>
+    <>
+      <Box>
+        <HomeBar user={user} setUser={setUser} />
+      </Box>
+      <div>
+        <TextField label="Split Name" onChange={handleNewSplit} />
+        <div>{`New split: ${newSplit}`}</div>
+        <Button onClick={submitSplit}>SUBMIT SPLIT</Button>
+        <TextField label="Exercise Name" onChange={handleNewExercise} />
+        <div>{`New exercise: ${newExercise}`}</div>
+        <Button onClick={submitExercise}>SUBMIT EXERCISE</Button>
+      </div>
+    </>
   );
 }
 
