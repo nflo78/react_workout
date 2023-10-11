@@ -8,7 +8,6 @@ import {
 /* eslint-enable */
 import axios from 'axios';
 import Calendar from './Calendar';
-import HomeBar from './HomeBar';
 import Splits from './Splits';
 import Session from './Session';
 import NewExercise from './NewExercise';
@@ -23,12 +22,6 @@ function Home({ user, setUser, allSplits, setAllSplits, allExercises, setAllExer
   //     return navigate('/')
   //   }
   // }, [user])
-  const handleLogout = async (e) => {
-    e.preventDefault();
-    document.cookie = 'workoutv1= ; expires = Thu, 01 Jan 1970 00:00:00 GMT';
-    await setUser('');
-    navigate('/');
-  };
 
   const getInfo = () => axios.post('/getinfo', { user: user })
     .then((result) => {
@@ -49,9 +42,6 @@ function Home({ user, setUser, allSplits, setAllSplits, allExercises, setAllExer
 
   return (
     <>
-      <Box>
-        <HomeBar user={user} setUser={setUser} />
-      </Box>
       <Box>
         <div>{`The Date is ${new Date().toDateString()}`}</div>
         <div>{`Calendar date is ${new Date(day).toDateString()}`}</div>

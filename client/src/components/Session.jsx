@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import axios from 'axios';
-import HomeBar from './HomeBar'
 import NewExercise from './NewExercise';
 
 function Session({ user, setUser, allSplits, allExercises }) {
@@ -15,10 +14,6 @@ function Session({ user, setUser, allSplits, allExercises }) {
     setAmount(amount.concat([amount.length + 1]));
   };
   return (
-    <>
-      <Box>
-        <HomeBar user={user} setUser={setUser} />
-      </Box>
       <Box>
         <FormControl style={{ width: '50vw' }}>
           <InputLabel>Today's workout</InputLabel>
@@ -43,7 +38,6 @@ function Session({ user, setUser, allSplits, allExercises }) {
         </div>
         <Button onClick={addExercise}>{`Add New Exercise to today's ${currentSplit} workout`}</Button>
       </Box>
-    </>
   );
 }
 

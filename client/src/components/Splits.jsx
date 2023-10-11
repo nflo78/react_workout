@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import axios from 'axios';
-import HomeBar from './HomeBar';
+
 function Splits({ user, setUser }) {
   const [newSplit, setNewSplit] = useState('');
   const [newExercise, setNewExercise] = useState('');
@@ -32,9 +32,6 @@ function Splits({ user, setUser }) {
 
   return (
     <>
-      <Box>
-        <HomeBar user={user} setUser={setUser} />
-      </Box>
       <div>
         <TextField label="Split Name" onChange={handleNewSplit} />
         <div>{`New split: ${newSplit}`}</div>

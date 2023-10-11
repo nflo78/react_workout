@@ -6,7 +6,7 @@ import {
   Box, Button, AppBar, Toolbar, IconButton, Typography, TextField, Menu, MenuItem
 } from '@mui/material';
 
-function HomeBar ({user, setUser}) {
+function Header ({user, setUser}) {
   const navigate = useNavigate();
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -35,4 +35,4 @@ function HomeBar ({user, setUser}) {
   )
 }
 
-export default HomeBar;
+export default Header;
