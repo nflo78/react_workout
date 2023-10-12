@@ -23,22 +23,22 @@ function Home({ user, setUser, allSplits, setAllSplits, allExercises, setAllExer
   //   }
   // }, [user])
 
-  const getInfo = () => axios.post('/getinfo', { user: user })
-    .then((result) => {
-      console.log('GET INFO RESULTS: ', result.data);
-      if (result.data.splits) {
-        const userSplits = result.data.splits.map((split) => split.name);
-        // console.log('USER SPLITS: ', userSplits)
-        setAllSplits(userSplits);
-      }
-      if (result.data.exercises) {
-        const userExercises = result.data.exercises.map((exercise) => exercise.name);
-        setAllExercises(userExercises);
-      }
-    })
-    .catch((err) => { console.log('GET Splits RESULT ERR: ', err); });
+  // const getInfo = () => axios.post('/getinfo', { user: user })
+  //   .then((result) => {
+  //     console.log('GET INFO RESULTS: ', result.data);
+  //     if (result.data.splits) {
+  //       const userSplits = result.data.splits.map((split) => split.name);
+  //       // console.log('USER SPLITS: ', userSplits)
+  //       setAllSplits(userSplits);
+  //     }
+  //     if (result.data.exercises) {
+  //       const userExercises = result.data.exercises.map((exercise) => exercise.name);
+  //       setAllExercises(userExercises);
+  //     }
+  //   })
+  //   .catch((err) => { console.log('GET Splits RESULT ERR: ', err); });
 
-  useEffect(() => { getInfo(); }, [user]);
+  // useEffect(() => { getInfo(); }, [user]);
 
   return (
     <>

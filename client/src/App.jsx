@@ -7,6 +7,7 @@ import Splits from './components/Splits'
 import Session from './components/Session'
 import Header from './components/Header'
 import PrivateRoute from './components/PrivateRoute'
+import axios from 'axios'
 
 export default function App () {
   const [user, setUser] = useState('')
@@ -19,16 +20,34 @@ export default function App () {
     //   await setUser(document.cookie.substring('workoutv1='.length))
     //   navigate("/home")
     // }
-  }
+  };
+  const getInfo = () => axios.post('/getinfo', { user: user })
+    .then((result) => {
+      console.log('GET INFO RESULTS: ', result.data);
+      if (result.data.splits) {
+        const userSplits = result.data.splits.map((split) => split.name);
+        // console.log('USER SPLITS: ', userSplits)
+        setAllSplits(userSplits);
+      }
+      if (result.data.exercises) {
+        const userExercises = result.data.exercises.map((exercise) => exercise.name);
+        setAllExercises(userExercises);
+      }
+    })
+    .catch((err) => { console.log('GET Splits RESULT ERR: ', err); });
+
+  useEffect(() => { getInfo(); }, [user]);
   useEffect(() => {handleRefresh()}, [])
 
   return (
     <>
       <Header user={user} setUser={setUser}/>
       <Routes>
-        <Route path="/" element={<Login user={user} setUser={setUser}/>}/>
-        <Route element={<PrivateRoute user={user}/>}>
-          <Route path="/home" element={<Home user={user} setUser={setUser} allSplits={allSplits} setAllSplits={setAllSplits} allExercises={allExercises} setAllExercises={setAllExercises}/>}/>
+        <Route path="/" element={<Login user={user} setUser={setUser} />} />
+        <Route element={<PrivateRoute user={user} />}>
+          <Route path="/home" element={<Home user={user} setUser={setUser} allSplits={allSplits} setAllSplits={setAllSplits} allExercises={allExercises} setAllExercises={setAllExercises} />} />
+          <Route path="/splits" element={<Splits user={user} />} />
+          <Route path="/session" element={<Session user={user} setUser={setUser} allSplits={allSplits} allExercises={allExercises} />} />
         </Route>
         {/* <Route path="/home" element={<Home user={user} setUser={setUser} allSplits={allSplits} setAllSplits={setAllSplits} allExercises={allExercises} setAllExercises={setAllExercises}/>}/> */}
         <Route path="/signup" element ={<Signup/>}/>

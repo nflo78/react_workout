@@ -16,6 +16,7 @@ function Header ({user, setUser}) {
   }
 
   return (
+    user ?
     <AppBar position="static">
       <Toolbar>
         <Typography component="div">
@@ -30,6 +31,13 @@ function Header ({user, setUser}) {
         <Button sx={{ right: '0%' }} color="inherit" onClick={handleLogout}>
           Logout
         </Button>
+      </Toolbar>
+    </AppBar> :
+    <AppBar>
+      <Toolbar>
+        <Typography>
+          React Workout
+        </Typography>
       </Toolbar>
     </AppBar>
   )
