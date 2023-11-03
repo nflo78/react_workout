@@ -10,60 +10,38 @@ CREATE TABLE IF NOT EXISTS users (
   password BIGINT
 );
 
-CREATE TABLE IF NOT EXISTS splits (
-  id SERIAL PRIMARY KEY,
-  user_id INT,
-  name VARCHAR(20),
-  FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
-CREATE TABLE IF NOT EXISTS workouts (
-  id SERIAL PRIMARY KEY,
-  split_id INT,
-  timestamp DATE,
-  note VARCHAR(255),
-  FOREIGN KEY (split_id) REFERENCES splits(id)
-);
-
 CREATE TABLE IF NOT EXISTS exercises (
   id SERIAL PRIMARY KEY,
   name VARCHAR(30),
   user_id INT,
-  parameter VARCHAR(10),
+  note VARCHAR(50),
+  UNIQUE (name, user_id),
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- CREATE TABLE IF NOT EXISTS exercises (
---   id SERIAL PRIMARY KEY,
---   workout_id INT,
---   name VARCHAR(30),
---   parameter VARCHAR(10),
---   FOREIGN KEY (workout_id) REFERENCES workouts(id)
--- );
+CREATE TABLE IF NOT EXISTS splits (
+  id SERIAL PRIMARY KEY,
+  user_id INT,
+  name VARCHAR(20),
+  UNIQUE (name, user_id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS splitExerciseRelation (
+  exercise_id INT,
+  split_id INT,
+  UNIQUE (exercise_id, split_id),
+  FOREIGN KEY (exercise_id) REFERENCES exercises(id),
+  FOREIGN KEY (split_id) REFERENCES splits(id)
+);
 
 CREATE TABLE IF NOT EXISTS sets (
   id SERIAL PRIMARY KEY,
   exercise_id INT,
+  timestamp TIMESTAMPTZ,
   reps INT,
-  failure BOOLEAN,
+  weight INT,
   FOREIGN KEY (exercise_id) REFERENCES exercises(id)
 );
--- CREATE TABLE IF NOT EXISTS userlist (
---   id SERIAL PRIMARY KEY,
---   user_name VARCHAR (30) UNIQUE
--- );
 
--- CREATE TABLE IF NOT EXISTS userinfo (
---   id SERIAL PRIMARY KEY,
---   user_id INT UNIQUE,
---   hashpw BIGINT,
---   splits TEXT[],
---   FOREIGN KEY (user_id) REFERENCES userlist(id)
--- );
-
--- CREATE TABLE IF NOT EXISTS splitsinfo (
---   id SERIAL PRIMARY KEY,
---   user_id INT,
---   exercies VARCHAR(50),
---   FOREIGN KEY (user_id) REFERENCES userinfo(user_id)
--- );
+SET timezone = 'America/Los_Angeles';

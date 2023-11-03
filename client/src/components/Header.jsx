@@ -22,8 +22,8 @@ function Header ({user, setUser}) {
         <Typography component="div">
           {`Welcome ${user}`}
         </Typography>
-        <Button sx={{ rightt:'100%', color: 'white', display: 'block' }} onClick={() => navigate('/splits')}>
-          Splits
+        <Button sx={{ rightt:'100%', color: 'white', display: 'block' }} onClick={() => navigate('/edit')}>
+          Edit
         </Button>
         <Button sx={{color: 'white', display: 'block' }} onClick={() => navigate('/session')}>
           Session

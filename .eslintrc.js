@@ -18,6 +18,8 @@ module.exports = {
   ],
   rules: {
     'react/prop-types': 'off',
-    "object-shorthand": 0,
+    'object-shorthand': 0,
+    'no-await-in-loop': 'off',
+    'no-plusplus': 'off',
   },
 };
