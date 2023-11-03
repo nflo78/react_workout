@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-function Signup() {
+function Signup({ setUser }) {
   const [newUser, setNewUser] = React.useState('');
   const [password1, setPassword1] = React.useState('');
   const [password2, setPassword2] = React.useState('');
@@ -52,15 +52,16 @@ function Signup() {
     if (newUser !== '') {
       // eslint-disable-next-line consistent-return
       return axios.post('/submitUser', { user: newUser, password: password1 })
-        .then((result) => {
+        .then(async (result) => {
           console.log('SUBMITTED: ', result);
           setDupUser(false);
           setUserCreated(true);
-          setTimeout(() => { navigate('/'); }, 2000);
+          await setUser(newUser);
+          setTimeout(() => { navigate('/home'); }, 2000);
         })
         .catch((err) => {
           console.log('NEW USER ERR: ', err);
-          if (err.response.status === 409) {
+          if (err.response.data.indexOf('duplicate key value violates unique constraint') !== -1) {
             setDupUser(true);
           }
         });
@@ -74,16 +75,9 @@ function Signup() {
       <TextField label="Password" type="password" onChange={handlePass1} />
       <TextField label="Confirm Password" type="password" onChange={handlePass2} />
       <Button type="submit" variant="contained">Sign Up!</Button>
-      {/* <input type='text' placeholder='username' onChange={handleNewUser}></input>
-      <input type='text' placeholder='password' onChange={handlePass1}></input>
-      <input type='text' placeholder='confirm password' onChange={handlePass2}></input> */}
-      {/* <button>Sign up!</button> */}
       <div>{userCreated && 'Account created successfully!'}</div>
       <div>{dupUser && 'Username already exists'}</div>
       <div>{diffPw && 'Passwords must be the same'}</div>
-      {/* <div>{`NEW USER${newUser}`}</div>
-      <div>{`PASS1${password1}`}</div>
-      <div>{`PASS2${password2}`}</div> */}
     </form>
   );
 }

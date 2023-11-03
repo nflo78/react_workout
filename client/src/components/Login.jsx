@@ -44,7 +44,7 @@ function Login({ user, setUser }) {
 
   return (
     <div className="loginPage">
-      <h2> Workout </h2>
+      <h2> Workout WOOOOO </h2>
       <form onSubmit={handleLogin}>
         <TextField label="Username" onChange={handleName} />
         <TextField label="Password" type="password" onChange={handlePw} />
@@ -66,6 +66,7 @@ function Login({ user, setUser }) {
       <div>
         {`USER : ${user}`}
       </div>
+      {/* <div>WEBPACK</div> */}
     </div>
   );
 }

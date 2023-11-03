@@ -38,4 +38,10 @@ module.exports = {
   // devServer: {
   //   historyApiFallback: true,
   // },
+  // devServer: {
+  //   port: 8000,
+  //   contentBase: ['./src', './public'],
+  //   inline: true,
+  //   hot: true,
+  // },
 };
