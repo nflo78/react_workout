@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { UserContext } from '../AppContext';
 
-function Signup({ setUser }) {
+function Signup() {
   const [newUser, setNewUser] = React.useState('');
   const [password1, setPassword1] = React.useState('');
   const [password2, setPassword2] = React.useState('');
   const [dupUser, setDupUser] = React.useState(false);
   const [diffPw, setDiffPw] = React.useState(false);
   const [userCreated, setUserCreated] = React.useState(false);
+  const { username } = useContext(UserContext);
+  const [, setUser] = username;
   const navigate = useNavigate();
 
   const handleNewUser = (e) => {

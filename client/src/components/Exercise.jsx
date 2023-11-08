@@ -5,10 +5,13 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import NewSet from './NewSet';
 import DateMenu from './DateMenu';
-// eslint-disable-next-line
-import { UserContext } from '../App';
+import { UserContext } from '../AppContext';
 
-function Exercise({ user, currentExercise, currentSplit }) {
+function Exercise() {
+  const { username, single_exercise, single_split } = useContext(UserContext);
+  const [user] = username;
+  const [currentExercise] = single_exercise;
+  const [currentSplit] = single_split;
   const [sets, setSets] = useState([1]);
   const [reps, setReps] = useState([]);
   const [weightLoad, setWeightLoad] = useState([]);
@@ -28,22 +31,14 @@ function Exercise({ user, currentExercise, currentSplit }) {
       exercise: currentExercise,
       reps: reps,
       weight: weightLoad,
-      date: menuDate,
+      date: new Date(menuDate),
     };
     console.log('SUBMITTING: ', submission);
     return axios.post('/submitexercise', submission)
       .then(() => {console.log('session submitted!')})
       .catch((err) => {console.log('session error: ', err)})
   };
-  const testContext = useContext(UserContext);
 
-  const testButton = (e) => {
-    e.preventDefault();
-    // return axios.get('/testController')
-    //   .then((result) => {console.log('TEST CONTROLLER: ', result); setWarning(false)})
-    //   .catch((err) => {console.log('TEST CONTROLLER ERR: ', err); setWarning(true)})
-    console.log(testContext);
-  };
   return (
     <>
       <Box>
@@ -67,7 +62,7 @@ function Exercise({ user, currentExercise, currentSplit }) {
       </Box>
       <Box>
         <Button onClick={submitExercise}>Submit Exercise</Button>
-        <Button onClick={() => {console.log('DATE: ', menuDate.$d); console.log('TYPE OF: ', (typeof menuDate.$d))}}>Check Date</Button>
+        <Button onClick={() => {console.log('DATE: ', menuDate); console.log('NEW DATE: ', new Date(menuDate))}}>Check Date</Button>
       </Box>
       {/* <Box>
         <Button onClick={testButton}>Test controller</Button>
