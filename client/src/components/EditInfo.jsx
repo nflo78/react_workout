@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Button, TextField, Typography, FormGroup, FormControlLabel, Checkbox} from '@mui/material';
 import axios from 'axios';
-import { UserContext } from '../App';
+import { UserContext } from '../AppContext';
 
-function EditInfo({ user, setUser, getInfo }) {
+function EditInfo({ getInfo }) {
   const [newSplit, setNewSplit] = useState('');
   const [newExercise, setNewExercise] = useState('');
   const [relations, setRelations] = useState([]);
   const [warningSplit, setWarningSplit] = useState(false);
   const [warningExercise, setWarningExercise] = useState(false);
-
-  const AppContext = useContext(UserContext);
+  const { username, splits, exercises } = useContext(UserContext);
+  const [user] = username;
+  const [allSplits] = splits;
+  const [allExercises] = exercises;
   const handleNewSplit = (e) => {
     setNewSplit(e.target.value);
   };
@@ -58,7 +60,7 @@ function EditInfo({ user, setUser, getInfo }) {
       // console.log('CONTEXT: ', AppContext);
       console.log('RELATIONS: ', relations);
     },
-    [AppContext, relations],
+    [relations],
   );
   return (
     <>
@@ -80,7 +82,7 @@ function EditInfo({ user, setUser, getInfo }) {
           <TextField label="Exercise Name" onChange={handleNewExercise} />
           <Box>
             <Typography variant="h7">Split Relation</Typography>
-            {AppContext.splits.map((split) => (
+            {allSplits.map((split) => (
               <FormControlLabel
                 key={split}
                 label={split}
@@ -105,11 +107,11 @@ function EditInfo({ user, setUser, getInfo }) {
       <br></br>
       <Box>
         <Typography variant="h5">Your Splits</Typography>
-        {AppContext.splits.map((split) => <Box key={split}>{split}</Box>)}
+        {allSplits.map((split) => <Box key={split}>{split}</Box>)}
       </Box>
       <Box>
         <Typography variant="h5">Your Exercises</Typography>
-        {AppContext.exercises.map((exercise) => <Box key={exercise}>{exercise}</Box>)}
+        {allExercises.map((exercise) => <Box key={exercise}>{exercise}</Box>)}
       </Box>
     </>
   );

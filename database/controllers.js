@@ -75,12 +75,13 @@ module.exports = {
       await dbPool.query('BEGIN');
       const exerciseQuery = await dbPool.query(`SELECT exercises.id FROM exercises LEFT JOIN users ON exercises.user_id = users.id WHERE exercises.name = '${req.body.exercise}' AND users.name = '${req.body.user}'`);
       const exerciseId = exerciseQuery.rows[0].id;
-      const date = new Date(req.body.date);
-      const timeZone = 'America/Los_Angeles';
-      const formattedDate = date.toLocaleString('en-US', { timeZone });
+      // const date = new Date(req.body.date);
+      // const timeZone = 'America/Los_Angeles';
+      // const formattedDate = date.toLocaleString('en-US', { timeZone });
+      console.log('DATE: ', req.body.date);
       // console.log('DB DATE: ', formattedDate);
       for (let i = 0; i < req.body.reps.length; i++) {
-        const newSet = `INSERT INTO sets(exercise_id, timestamp, reps, weight) VALUES(${exerciseId}, '${formattedDate}', ${req.body.reps[i]}, ${req.body.weight[i]})`;
+        const newSet = `INSERT INTO sets(exercise_id, timestamp, reps, weight) VALUES(${exerciseId}, '${req.body.date}', ${req.body.reps[i]}, ${req.body.weight[i]})`;
         await dbPool.query(newSet);
       }
       await dbPool.query('COMMIT');

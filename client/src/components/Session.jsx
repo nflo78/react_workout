@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Box, Button, TextField, FormControl, InputLabel, MenuItem, Select, List, ListSubheader, ListItemButton, ListItemText, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Exercise from './Exercise';
+import { UserContext } from '../AppContext';
 
-function Session({ allSplits, setCurrentExercise, currentSplit, setCurrentSplit }) {
+function Session() {
+  // allSplits, setCurrentExercise, currentSplit, setCurrentSplit
   // const [currentSplit, setCurrentSplit] = useState('');
   // const [amount, setAmount] = useState([1]);
+  const { splits, single_exercise, single_split } = useContext(UserContext);
+  const [allSplits] = splits;
+  const [currentSplit, setCurrentSplit] = single_split;
+  const [, setCurrentExercise] = single_exercise;
   const [session, setSession] = useState({ split: currentSplit });
   const [sessionExercises, setSessionExercises] = useState([]);
   const [warning, setWarning] = useState(false);

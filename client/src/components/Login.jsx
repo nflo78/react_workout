@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 // eslint-disable-next-line
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { UserContext } from '../AppContext';
 
-function Login({ user, setUser }) {
+function Login() {
   const [name, setName] = useState('');
   // const [password, setPassword] = useState('');
   const [hashPw, setHashPw] = useState('');
   const navigate = useNavigate();
-
+  const { username } = useContext(UserContext);
+  const [user, setUser] = username;
   const handleName = (e) => {
     setName(e.target.value);
   };
