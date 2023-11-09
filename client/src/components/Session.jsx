@@ -16,6 +16,7 @@ function Session() {
   const [sessionExercises, setSessionExercises] = useState([]);
   const [warning, setWarning] = useState(false);
   const navigate = useNavigate();
+  const blackBorderSX = { border: '1px solid black' };
   const handleSplitChange = (e) => {
     setWarning(false);
     setCurrentSplit(e.target.value);
@@ -44,7 +45,7 @@ function Session() {
     // return axios.post('/getsplitexercises', { currentSplit: currentSplit });
   }, [currentSplit]);
   return (
-    <Box>
+    <Box sx={blackBorderSX}>
       <FormControl style={{ width: '50vw' }}>
         <InputLabel>Today's workout</InputLabel>
         <Select

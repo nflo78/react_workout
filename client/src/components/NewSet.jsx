@@ -8,6 +8,7 @@ function NewSet({
   const [count, setCount] = useState(0);
   const [warning, setWarning] = useState(false);
   const [weight, setWeight] = useState(prevWeight);
+  const blackBorderSX = { border: '1px solid black' };
   const handleCount = (e) => {
     setCount(e.target.value);
   };
@@ -32,13 +33,13 @@ function NewSet({
   };
   useEffect(handleNewSet, [count, weight]);
   return (
-    <>
+    <Box sx={blackBorderSX}>
       <Typography>{`Set ${index + 1}`}</Typography>
       <TextField label="Rep Count" onChange={handleCount} />
       <TextField label="lbs" onChange={handleWeight} defaultValue={prevWeight} />
       <div>{`WEIGHT: ${weight}`}</div>
       {warning && <Typography>Please enter a valid number</Typography>}
-    </>
+    </Box>
   );
 }
 

@@ -4,14 +4,15 @@ import React, { useState, useEffect, useMemo, createContext } from 'react';
 export const UserContext = createContext();
 export function AppContextProvider({ children }) {
   const [user, setUser] = useState('');
+  const [auth, setAuth] = useState(null);
   const [allSplits, setAllSplits] = useState([]);
   const [allExercises, setAllExercises] = useState([]);
   const [currentExercise, setCurrentExercise] = useState('');
   const [currentSplit, setCurrentSplit] = useState('');
-  // const contextObj = {user: user, splits: allSplits, exercises: allExercises};
 
   const userInfo = useMemo(() => ({
     username: [user, setUser],
+    authenticated: [auth, setAuth],
     splits: [allSplits, setAllSplits],
     exercises: [allExercises, setAllExercises],
     single_exercise: [currentExercise, setCurrentExercise],

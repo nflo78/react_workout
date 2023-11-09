@@ -1,4 +1,6 @@
+require('dotenv').config();
 const { Pool } = require('pg');
+const jwt = require('jsonwebtoken');
 
 const dbPool = new Pool({
   host: process.env.PG_HOST,
@@ -21,8 +23,33 @@ module.exports = {
     if (!loginQuery.rows[0]) {
       return res.sendStatus(401);
     }
-    res.cookie('workoutv1', req.body.user, { maxAge: 60 * 1000 * 30 });
+    const userQuery = await dbPool.query(`SELECT name FROM users WHERE name = '${req.body.user}'`);
+    const user = userQuery.rows[0];
+    console.log('LOGIN DB ID: ', user);
+    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+
+    res.cookie('workoutv1', accessToken, { maxAge: 60 * 1000 * 30 });
     return res.sendStatus(201);
+    // res.cookie('workoutv1', req.body.user, { maxAge: 60 * 1000 * 30 });
+    // return res.sendStatus(201);
+  },
+  authenticateUser: async (req, res) => {
+    console.log('DB AUTH: ', req.body);
+    const token = req.body.authToken;
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+      if (err) {
+        throw err;
+      }
+      return res.send(user);
+    })
+  },
+
+  recentWorkout: async (req, res) => {
+    // not done
+    const queryStr = `WITH recent_date AS (SELECT sets.timestamp::date FROM sets ORDER BY sets.timestamp::date DESC LIMIT 1)
+    SELECT users.name, exercises.name, sets.timestamp::date, sets.reps, sets.weight FROM exercises INNER JOIN sets ON exercises.id = sets.exercise_id INNER JOIN users ON users.id = sets.user_id WHERE sets.timestamp::date = (SELECT timestamp FROM recent_date) AND users.name = '${req.body.user}'`;
+    const lastWorkout = await dbPool.query(queryStr);
+    res.send(lastWorkout.rows);
   },
 
   submitSplit: async (req, res) => {
@@ -73,15 +100,13 @@ module.exports = {
     console.log('DB RECEIVED SUBMISSION: ', req.body);
     try {
       await dbPool.query('BEGIN');
-      const exerciseQuery = await dbPool.query(`SELECT exercises.id FROM exercises LEFT JOIN users ON exercises.user_id = users.id WHERE exercises.name = '${req.body.exercise}' AND users.name = '${req.body.user}'`);
+      const userQuery = await dbPool.query(`SELECT id FROM users WHERE name = '${req.body.user}'`);
+      const userId = userQuery.rows[0].id;
+      const exerciseQuery = await dbPool.query(`SELECT exercises.id FROM exercises LEFT JOIN users ON exercises.user_id = users.id WHERE exercises.name = '${req.body.exercise}' AND users.id = '${userId}'`);
       const exerciseId = exerciseQuery.rows[0].id;
-      // const date = new Date(req.body.date);
-      // const timeZone = 'America/Los_Angeles';
-      // const formattedDate = date.toLocaleString('en-US', { timeZone });
-      console.log('DATE: ', req.body.date);
-      // console.log('DB DATE: ', formattedDate);
+      // console.log('DATE: ', req.body.date);
       for (let i = 0; i < req.body.reps.length; i++) {
-        const newSet = `INSERT INTO sets(exercise_id, timestamp, reps, weight) VALUES(${exerciseId}, '${req.body.date}', ${req.body.reps[i]}, ${req.body.weight[i]})`;
+        const newSet = `INSERT INTO sets(exercise_id, user_id, timestamp, reps, weight) VALUES(${exerciseId}, ${userId}, '${req.body.date}', ${req.body.reps[i]}, ${req.body.weight[i]})`;
         await dbPool.query(newSet);
       }
       await dbPool.query('COMMIT');

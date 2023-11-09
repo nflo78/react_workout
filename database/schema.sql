@@ -38,10 +38,10 @@ CREATE TABLE IF NOT EXISTS splitExerciseRelation (
 CREATE TABLE IF NOT EXISTS sets (
   id SERIAL PRIMARY KEY,
   exercise_id INT,
+  user_id INT,
   timestamp TIMESTAMPTZ,
   reps INT,
   weight INT,
+  FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (exercise_id) REFERENCES exercises(id)
 );
-
-SET timezone = 'America/Los_Angeles';

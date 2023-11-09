@@ -13,6 +13,7 @@ function EditInfo({ getInfo }) {
   const [user] = username;
   const [allSplits] = splits;
   const [allExercises] = exercises;
+  const blackBorderSX = { border: '1px solid black' };
   const handleNewSplit = (e) => {
     setNewSplit(e.target.value);
   };
@@ -42,7 +43,6 @@ function EditInfo({ getInfo }) {
       .then(() => { getInfo(); })
       .catch((err) => {
         console.log('NEW EXERCISE ERR: ', err);
-        // return axios.post('deletenewexercise', { exercise: newExercise, user: user, relation: relations });
       });
   };
 
@@ -64,7 +64,7 @@ function EditInfo({ getInfo }) {
   );
   return (
     <>
-      <Box>
+      <Box sx={blackBorderSX}>
         <TextField label="Split Name" onChange={handleNewSplit} />
         <div>{`New split: ${newSplit}`}</div>
         <Button onClick={submitSplit}>SUBMIT SPLIT</Button>
@@ -76,7 +76,7 @@ function EditInfo({ getInfo }) {
       </Box>
       <br></br>
       <Box
-        sx={{ border: '1px solid black' }}
+        sx={blackBorderSX}
       >
         <FormGroup>
           <TextField label="Exercise Name" onChange={handleNewExercise} />
@@ -105,11 +105,11 @@ function EditInfo({ getInfo }) {
         )}
       </Box>
       <br></br>
-      <Box>
+      <Box sx={blackBorderSX}>
         <Typography variant="h5">Your Splits</Typography>
         {allSplits.map((split) => <Box key={split}>{split}</Box>)}
       </Box>
-      <Box>
+      <Box sx={blackBorderSX}>
         <Typography variant="h5">Your Exercises</Typography>
         {allExercises.map((exercise) => <Box key={exercise}>{exercise}</Box>)}
       </Box>

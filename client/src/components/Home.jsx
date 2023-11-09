@@ -12,11 +12,15 @@ import { UserContext } from '../AppContext';
 
 function Home() {
   const [day, setDay] = useState(new Date().toDateString());
-  // const { username } = useContext(UserContext);
-  // const [user] = username;
-
+  const { username } = useContext(UserContext);
+  const [user] = username
+  const blackBorderSX = { border: '1px solid black' };
+  const lastWorkout = () => axios.post('/recentworkout', {user: user})
+    .then((result) => {console.log('RECENT WORKOUT: ', result)})
+    .catch((err) => {console.log('RECENT WORKOUT ERR: ', err)})
+  useEffect(() => {lastWorkout()}, []);
   return (
-    <Box>
+    <Box sx={blackBorderSX}>
       <div>{`The Date is ${new Date().toDateString()}`}</div>
       <div>{`Calendar date is ${new Date(day).toDateString()}`}</div>
       <Calendar setDay={setDay} />

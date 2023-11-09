@@ -2,9 +2,10 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import {
   Route, Routes, useNavigate, useLocation,
 } from 'react-router-dom';
+import { Box } from '@mui/material';
 import axios from 'axios';
 import { UserContext } from './AppContext';
-import Test from './components/Test';
+import Loader from './components/Loader';
 import Home from './components/Home';
 import Login from './components/Login';
 import Signup from './components/Signup';
@@ -18,22 +19,34 @@ import PrivateNestedRoute from './components/PrivateNestedRoute';
 // export const UserContext = createContext();
 
 function App() {
-  // const [user, setUser] = useState('');
-  // const [allSplits, setAllSplits] = useState([]);
-  // const [allExercises, setAllExercises] = useState([]);
-  // const [currentExercise, setCurrentExercise] = useState('');
-  // const [currentSplit, setCurrentSplit] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const { username, splits, exercises } = useContext(UserContext);
+  const {
+    username, authenticated, splits, exercises,
+  } = useContext(UserContext);
   const [user, setUser] = username;
+  const [auth, setAuth] = authenticated;
   const [, setAllSplits] = splits;
   const [, setAllExercises] = exercises;
-  const handleRefresh = async () => {
+  const handleRefresh = () => {
+    // if (document.cookie) {
+    //   await setUser(document.cookie.substring('workoutv1='.length));
+    //   navigate(location.pathname);
+    // }
     if (document.cookie) {
-      await setUser(document.cookie.substring('workoutv1='.length));
-      navigate(location.pathname);
+      const authToken = document.cookie.substring('workoutv1='.length);
+      console.log('COOKIE JWT: ', authToken);
+      return axios.post('/authenticateuser', { authToken: authToken })
+        .then(async (result) => {
+          console.log('AUTHENTICATED', result);
+          await setAuth(true);
+          console.log('AUTH STATUS: ', auth);
+          await setUser(result.data.name);
+          navigate(location.pathname);
+        })
+        .catch((err) => {setAuth(false); console.log('REFRESH AUTH ERROR: ', err)})
     }
+    return setAuth(false);
   };
   const getInfo = () => axios.post('/fetchinfo', { user: user })
     .then((result) => {
@@ -69,27 +82,26 @@ function App() {
     //     <Route path="/signup" element={<Signup setUser={setUser} />} />
     //   </Routes>
     // </UserContext.Provider>
-
-    <>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route element={<PrivateRoute user={user} />}>
-          <Route path="/edit" element={<EditInfo getInfo={getInfo} />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/session" element={<Session />} />
-          <Route element={<PrivateNestedRoute />}>
-            <Route path="/exercise" element={<Exercise />} />
-          </Route>
-        </Route>
-      </Routes>
-    </>
-    // <AppContextProvider>
-    //   <Routes>
-    //       <Route path="/" element={<Test/>} />
-    //   </Routes>
-    // </AppContextProvider>
+    (auth === null) ? <Loader />
+      : (
+        <>
+          <Header />
+          <Box>
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route element={<PrivateRoute user={user} />}>
+                <Route path="/edit" element={<EditInfo getInfo={getInfo} />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/session" element={<Session />} />
+                <Route element={<PrivateNestedRoute />}>
+                  <Route path="/exercise" element={<Exercise />} />
+                </Route>
+              </Route>
+            </Routes>
+          </Box>
+        </>
+      )
   );
 }
 

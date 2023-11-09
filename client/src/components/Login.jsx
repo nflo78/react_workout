@@ -2,8 +2,7 @@ import React, { useState, useContext } from 'react';
 // eslint-disable-next-line
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import { Box, Button, TextField } from '@mui/material';
 import { UserContext } from '../AppContext';
 
 function Login() {
@@ -11,8 +10,10 @@ function Login() {
   // const [password, setPassword] = useState('');
   const [hashPw, setHashPw] = useState('');
   const navigate = useNavigate();
-  const { username } = useContext(UserContext);
+  const { username, authenticated } = useContext(UserContext);
   const [user, setUser] = username;
+  const [, setAuth] = authenticated;
+  const blackBorderSX = { border: '1px solid black' };
   const handleName = (e) => {
     setName(e.target.value);
   };
@@ -20,12 +21,13 @@ function Login() {
   const handleLogin = (e) => {
     e.preventDefault();
     return axios.post('/login', { user: name, password: hashPw })
-      .then((result) => {
+      .then(async (result) => {
         console.log('SUCCESFUL LOGIN: ', result);
-        console.log('HERE COOKIE: ', document.cookie);
-        setUser(name);
+        // console.log('HERE COOKIE: ', document.cookie);
+        await setUser(name);
+        await setAuth(true);
+        navigate('/home');
       })
-      .then(() => navigate('/home'))
       .catch((err) => { console.log('LOGIN ERROR :', err); });
   };
   const signup = () => {
@@ -45,7 +47,7 @@ function Login() {
   };
 
   return (
-    <div className="loginPage">
+    <Box className="loginPage" sx={blackBorderSX}>
       <h2> Workout WOOOOO </h2>
       <form onSubmit={handleLogin}>
         <TextField label="Username" onChange={handleName} />
@@ -69,7 +71,7 @@ function Login() {
         {`USER : ${user}`}
       </div>
       {/* <div>WEBPACK</div> */}
-    </div>
+    </Box>
   );
 }
 

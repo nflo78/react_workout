@@ -9,17 +9,19 @@ import {
 
 function Header () {
   const navigate = useNavigate();
-  const { username } = useContext(UserContext);
+  const { username, authenticated } = useContext(UserContext);
   const [user, setUser] = username;
+  const [, setAuthenticated] = authenticated;
   const handleLogout = async (e) => {
     e.preventDefault();
     document.cookie = 'workoutv1= ; expires = Thu, 01 Jan 1970 00:00:00 GMT';
+    await setAuthenticated(false);
     await setUser('');
     navigate('/');
   }
   return (
     user ?
-    <AppBar position="static">
+    <AppBar position="sticky">
       <Toolbar>
         <Typography component="div">
           {`Welcome ${user}`}
@@ -35,7 +37,7 @@ function Header () {
         </Button>
       </Toolbar>
     </AppBar> :
-    <AppBar>
+    <AppBar position="sticky">
       <Toolbar>
         <Typography>
           React Workout

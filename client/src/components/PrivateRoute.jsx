@@ -3,10 +3,10 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { UserContext } from '../AppContext';
 
 function PrivateRoute() {
-  const { username } = useContext(UserContext);
-  const [user] = username;
+  const { authenticated } = useContext(UserContext);
+  const [auth] = authenticated;
   return (
-    user ? <Outlet /> : <Navigate to="/" />
+    auth ? <Outlet /> : <Navigate to="/" />
   );
 }
 
