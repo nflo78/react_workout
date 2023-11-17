@@ -9,21 +9,21 @@ function EditInfo({ getInfo }) {
   const [relations, setRelations] = useState([]);
   const [warningSplit, setWarningSplit] = useState(false);
   const [warningExercise, setWarningExercise] = useState(false);
-  const { username, splits, exercises } = useContext(UserContext);
+  const { username, id, splits, exercises } = useContext(UserContext);
   const [user] = username;
+  const [userId] = id;
   const [allSplits] = splits;
   const [allExercises] = exercises;
   const blackBorderSX = { border: '1px solid black' };
   const handleNewSplit = (e) => {
     setNewSplit(e.target.value);
   };
-  // eslint-disable-next-line consistent-return
   const submitSplit = (e) => {
     e.preventDefault();
     if (!newSplit) {
       return setWarningSplit(true);
     }
-    return axios.post('/newsplit', { newsplit: newSplit, user: user })
+    return axios.post('/newsplit', { newsplit: newSplit, userId: userId })
       .then(() => { console.log('NEW SPLIT SUBMITTED'); })
       .then(() => getInfo())
       .catch((err) => { console.log('NEW SPLUT ERR: ', err); });
@@ -38,7 +38,7 @@ function EditInfo({ getInfo }) {
     if (!newExercise) {
       return setWarningExercise(true);
     }
-    return axios.post('/newexercise', { exercise: newExercise, user: user, relation: relations })
+    return axios.post('/newexercise', { exercise: newExercise, userId: userId, relation: relations })
       .then(() => { console.log('NEW EXERCISE SUBMITTED'); setWarningExercise(false); })
       .then(() => { getInfo(); })
       .catch((err) => {

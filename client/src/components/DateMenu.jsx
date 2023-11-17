@@ -4,13 +4,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-function DateMenu({ menuDate, setMenuDate }) {
+function DateMenu({ startDate, setStartDate }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         label="Workout Date"
-        value={menuDate}
-        onChange={(newValue) => setMenuDate(newValue)}
+        value={startDate}
+        onChange={(newValue) => setStartDate(newValue)}
       />
     </LocalizationProvider>
   );

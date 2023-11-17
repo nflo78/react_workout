@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS splits (
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE IF NOT EXISTS splitExerciseRelation (
+CREATE TABLE IF NOT EXISTS split_exercises(
   exercise_id INT,
   split_id INT,
   UNIQUE (exercise_id, split_id),
@@ -35,13 +35,22 @@ CREATE TABLE IF NOT EXISTS splitExerciseRelation (
   FOREIGN KEY (split_id) REFERENCES splits(id)
 );
 
+CREATE TABLE IF NOT EXISTS sessions (
+  id SERIAL PRIMARY KEY,
+  user_id INT,
+  split_id INT,
+  start_date TIMESTAMPTZ,
+  end_date TIMESTAMPTZ,
+  FOREIGN KEY (split_id) REFERENCES splits(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
 CREATE TABLE IF NOT EXISTS sets (
   id SERIAL PRIMARY KEY,
   exercise_id INT,
-  user_id INT,
-  timestamp TIMESTAMPTZ,
+  session_id INT,
   reps INT,
   weight INT,
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  FOREIGN KEY (exercise_id) REFERENCES exercises(id)
+  FOREIGN KEY (exercise_id) REFERENCES exercises(id),
+  FOREIGN KEY (session_id) REFERENCES sessions(id)
 );

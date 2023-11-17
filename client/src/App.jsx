@@ -22,10 +22,12 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const {
-    username, authenticated, splits, exercises,
+    username, id, authenticated, workouts, splits, exercises,
   } = useContext(UserContext);
   const [user, setUser] = username;
+  const [, setUserId] = id;
   const [auth, setAuth] = authenticated;
+  const [, setWorkoutCount] = workouts;
   const [, setAllSplits] = splits;
   const [, setAllExercises] = exercises;
   const handleRefresh = () => {
@@ -44,44 +46,36 @@ function App() {
           await setUser(result.data.name);
           navigate(location.pathname);
         })
-        .catch((err) => {setAuth(false); console.log('REFRESH AUTH ERROR: ', err)})
+        .catch((err) => { setAuth(false); console.log('REFRESH AUTH ERROR: ', err); });
     }
     return setAuth(false);
   };
-  const getInfo = () => axios.post('/fetchinfo', { user: user })
-    .then((result) => {
-      console.log('GET INFO RESULTS: ', result.data);
-      if (result.data.splits) {
-        const userSplits = result.data.splits.map((split) => split.name);
-        // console.log('USER SPLITS: ', userSplits)
-        setAllSplits(userSplits);
-      }
-      if (result.data.exercises) {
-        const userExercises = result.data.exercises.map((exercise) => exercise.name);
-        setAllExercises(userExercises);
-      }
-    })
-    .catch((err) => { console.log('GET Splits RESULT ERR: ', err); navigate('/'); });
-
-  useEffect(() => { getInfo(); }, [user]);
-  useEffect(() => { handleRefresh(); }, []);
+  const getInfo = () => (
+    axios.post('/fetchinfo', { user: user })
+      .then((result) => {
+        console.log('GET INFO RESULTS: ', result.data);
+        if (result.data.splits) {
+          const userSplits = result.data.splits.map((split) => split.name);
+          // console.log('USER SPLITS: ', userSplits)
+          setAllSplits(userSplits);
+        }
+        if (result.data.exercises) {
+          const userExercises = result.data.exercises.map((exercise) => exercise.name);
+          setAllExercises(userExercises);
+        }
+        if (result.data.workouts) {
+          setWorkoutCount(result.data.workouts[result.data.workouts.length - 1].id);
+        }
+        setUserId(result.data.userId);
+      })
+      .catch((err) => { console.log('GET Splits RESULT ERR: ', err); navigate('/'); })
+  );
+  // useEffect(() => {console.log('USER: ', user); if (user) {console.log('TRUE')}}, [user])
+  useEffect(() => { if (user) { getInfo(); } }, [user]);
+  useEffect(() => {handleRefresh()}, [])
+  // useEffect(() => { console.log('HANDLING REFRESH'); handleRefresh(); }, []);
 
   return (
-    // <UserContext.Provider value={contextObj}>
-    //   <Header user={user} setUser={setUser} />
-    //   <Routes>
-    //     <Route path="/" element={<Login user={user} setUser={setUser} />} />
-    //     <Route element={<PrivateRoute user={user} />}>
-    //       <Route path="/home" element={<Home user={user} setUser={setUser} allSplits={allSplits} setAllSplits={setAllSplits} allExercises={allExercises} setAllExercises={setAllExercises} />} />
-    //       <Route path="/edit" element={<EditInfo user={user} getInfo={getInfo} />} />
-    //       <Route path="/session" element={<Session user={user} setUser={setUser} allSplits={allSplits} allExercises={allExercises} setCurrentExercise={setCurrentExercise} currentSplit={currentSplit} setCurrentSplit={setCurrentSplit} />} />
-          // <Route element={<PrivateNestedRoute user={user} currentSplit={currentSplit} />}>
-          //   <Route path="/exercise" element={<Exercise user={user} currentExercise={currentExercise} currentSplit={currentSplit} />} />
-          // </Route>
-    //     </Route>
-    //     <Route path="/signup" element={<Signup setUser={setUser} />} />
-    //   </Routes>
-    // </UserContext.Provider>
     (auth === null) ? <Loader />
       : (
         <>

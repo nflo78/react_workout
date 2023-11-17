@@ -26,6 +26,9 @@ function Header () {
         <Typography component="div">
           {`Welcome ${user}`}
         </Typography>
+        <Button sx={{ rightt:'100%', color: 'white', display: 'block' }} onClick={() => navigate('/Home')}>
+          Home
+        </Button>
         <Button sx={{ rightt:'100%', color: 'white', display: 'block' }} onClick={() => navigate('/edit')}>
           Edit
         </Button>
