@@ -1,7 +1,7 @@
 const express = require('express');
 const {
   signUpUser, loginUser, authenticateUser,
-  fetchInfo, submitSplit, newExercise, submitExercise,
+  fetchInfo, submitSplit, newExercise, submitSet, submitExercise,
   splitExercise, fetchSession, startSession, stopSession, recentWorkout,
 } = require('./controllers');
 
@@ -28,6 +28,8 @@ router.post('/getsession', asyncHandler(fetchSession));
 router.post('/startsession', asyncHandler(startSession));
 
 router.post('/stopsession', asyncHandler(stopSession));
+
+router.post('/submitset', asyncHandler(submitSet));
 
 router.post('/submitexercise', asyncHandler(submitExercise));
 

@@ -51,6 +51,10 @@ CREATE TABLE IF NOT EXISTS sets (
   session_id INT,
   reps INT,
   weight INT,
+  session_order INT,
   FOREIGN KEY (exercise_id) REFERENCES exercises(id),
   FOREIGN KEY (session_id) REFERENCES sessions(id)
 );
+
+ALTER DATABASE workoutv1
+SET TIMEZONE TO 'UTC';

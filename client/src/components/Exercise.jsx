@@ -16,26 +16,26 @@ function Exercise() {
   const [weightLoad, setWeightLoad] = useState([]);
   const [prevWeight, setPrevWeight] = useState(0);
   const [warning, setWarning] = useState(false);
-  const handleNewSet = (e) => {
-    e.preventDefault();
-    setSets(sets.concat([sets.length + 1]));
-  };
-  useEffect(() => {console.log('REPS: ', reps); console.log('WEIGHTLOAD: ', weightLoad)}, [reps, weightLoad]);
-  const submitExercise = (e) => {
-    e.preventDefault();
-    const submission = {
-      user: user,
-      lastWorkout: lastWorkout,
-      split: currentSplit,
-      exercise: currentExercise,
-      reps: reps,
-      weight: weightLoad,
-    };
-    console.log('SUBMITTING: ', submission);
-    return axios.post('/submitexercise', submission)
-      .then(() => {console.log('session submitted!')})
-      .catch((err) => {console.log('session error: ', err)})
-  };
+  // const handleNewSet = (e) => {
+  //   e.preventDefault();
+  //   setSets(sets.concat([sets.length + 1]));
+  // };
+  // useEffect(() => {console.log('REPS: ', reps); console.log('WEIGHTLOAD: ', weightLoad)}, [reps, weightLoad]);
+  // const submitExercise = (e) => {
+  //   e.preventDefault();
+  //   const submission = {
+  //     user: user,
+  //     lastWorkout: lastWorkout,
+  //     split: currentSplit,
+  //     exercise: currentExercise,
+  //     reps: reps,
+  //     weight: weightLoad,
+  //   };
+  //   console.log('SUBMITTING: ', submission);
+  //   return axios.post('/submitexercise', submission)
+  //     .then(() => {console.log('session submitted!')})
+  //     .catch((err) => {console.log('session error: ', err)})
+  // };
 
   return (
     <>
@@ -46,6 +46,8 @@ function Exercise() {
             <NewSet
               key={set}
               index={index}
+              sets={sets}
+              setSets={setSets}
               reps={reps}
               setReps={setReps}
               weightLoad={weightLoad}
@@ -55,11 +57,11 @@ function Exercise() {
             />
           ))}
         </div>
-        <Button onClick={handleNewSet}>Add New Set</Button>
+        {/* <Button onClick={handleNewSet}>Add New Set</Button> */}
       </Box>
-      <Box>
+      {/* <Box>
         <Button onClick={submitExercise}>Submit Exercise</Button>
-      </Box>
+      </Box> */}
       {/* <Box>
         <Button onClick={testButton}>Test controller</Button>
         <Typography>{warning && 'WEE WOO'}</Typography>

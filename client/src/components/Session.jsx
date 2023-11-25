@@ -5,6 +5,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { UserContext } from '../AppContext';
 import DateMenu from './DateMenu';
+import LoggedExercise from './LoggedExercise';
 
 function Session() {
   const { username, id, splits, single_exercise, single_split } = useContext(UserContext);
@@ -14,6 +15,7 @@ function Session() {
   const [currentSplit, setCurrentSplit] = single_split;
   const [, setCurrentExercise] = single_exercise;
   const [sessionExercises, setSessionExercises] = useState([]);
+  const [loggedExercises, setLoggedExercises] = useState([]);
   const [startDate, setStartDate] = useState(dayjs(new Date()));
   const [warning, setWarning] = useState(false);
   const [sessionStarted, setSessionStarted] = useState(false);
@@ -37,9 +39,13 @@ function Session() {
   const getSession = () => axios.post('/getsession', { userId: userId })
     .then((result) => {
       console.log('GET SESSION: ', result.data);
-      if (result.data && result.data[0].name) {
-        setCurrentSplit(result.data[0].name);
+      if (result.data && result.data.split) {
+        setCurrentSplit(result.data.split);
         setSessionStarted(true);
+      }
+      if (result.data && result.data.exercises) {
+        console.log('RESULTEXERCISES: ', result.data.exercises);
+        setLoggedExercises(result.data.exercises);
       }
     })
     .catch((err) => {console.log('GET SESSION ERROR: ', err); });
@@ -65,7 +71,7 @@ function Session() {
       setSessionStarted(false);
     }
   }, [currentSplit]);
-
+  useEffect(() => {console.log('Logged: ', loggedExercises)}, [loggedExercises])
   useEffect(() => {getSession()}, [userId])
   return (
     <Box sx={blackBorderSX}>
@@ -109,6 +115,13 @@ function Session() {
           ))}
         </List>
         <Button onClick={stopSession}>Finish Workout Session</Button>
+        {loggedExercises.map((exercise) => (
+          <LoggedExercise
+            name={exercise.name}
+            key={exercise.name}
+            sets={exercise.sets}
+          />
+        ))}
       </Box>
       )}
     </Box>

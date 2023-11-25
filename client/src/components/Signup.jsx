@@ -12,9 +12,23 @@ function Signup() {
   const [dupUser, setDupUser] = React.useState(false);
   const [diffPw, setDiffPw] = React.useState(false);
   const [userCreated, setUserCreated] = React.useState(false);
-  const { username } = useContext(UserContext);
+  const { username, authenticated } = useContext(UserContext);
   const [, setUser] = username;
+  const [, setAuth] = authenticated;
   const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    return axios.post('/login', { user: newUser, password: password1 })
+      .then(async (result) => {
+        console.log('SUCCESFUL LOGIN: ', result);
+        // console.log('HERE COOKIE: ', document.cookie);
+        await setUser(newUser);
+        await setAuth(true);
+        navigate('/home');
+      })
+      .catch((err) => { console.log('LOGIN ERROR :', err); });
+  };
 
   const handleNewUser = (e) => {
     setNewUser(e.target.value);
@@ -60,8 +74,9 @@ function Signup() {
           setDupUser(false);
           setUserCreated(true);
           await setUser(newUser);
-          setTimeout(() => { navigate('/home'); }, 2000);
+          // setTimeout(() => { navigate('/home'); }, 2000);
         })
+        .then(() => handleLogin(e))
         .catch((err) => {
           console.log('NEW USER ERR: ', err);
           if (err.response.data.indexOf('duplicate key value violates unique constraint') !== -1) {

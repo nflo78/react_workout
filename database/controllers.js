@@ -127,9 +127,33 @@ module.exports = {
   },
 
   fetchSession: async (req, res) => {
-    const sessionQuery = `SELECT name FROM splits LEFT JOIN sessions ON sessions.split_id = splits.id WHERE splits.user_id = ${req.body.userId} AND sessions.end_date IS null LIMIT 1`;
-    const unfinishedSession = await dbPool.query(sessionQuery);
-    return res.send(unfinishedSession.rows);
+    const { userId } = req.body;
+    // let sessionId;
+    // let splitName;
+    const payload = {};
+    payload.exercises = [];
+    const unfinishedSession = await dbPool.query(`SELECT splits.name, sessions.id FROM splits LEFT JOIN sessions ON sessions.split_id = splits.id WHERE splits.user_id = ${userId} AND sessions.start_date IS NOT NULL AND sessions.end_date IS null LIMIT 1`);
+    if (unfinishedSession.rows[0]) {
+      // payload.exercises = [];
+      payload.split = unfinishedSession.rows[0].name;
+      const sessionId = unfinishedSession.rows[0].id;
+      payload.sessionId = sessionId;
+      // orders distinct exercise names by which was done first
+      const distinctExercise = await dbPool.query(`SELECT name, exercise_id, session_order
+      FROM ( SELECT DISTINCT ON (exercises.name) *
+      FROM exercises LEFT JOIN sets ON sets.exercise_id = exercises.id WHERE sets.session_id = ${sessionId} ORDER BY exercises.name, sets.session_order ) AS e
+      ORDER BY session_order`);
+      console.log('DISTINCT EXERCISES: ', distinctExercise.rows);
+      for (let i = 0; i < distinctExercise.rows.length; i++) {
+        payload.exercises.push({ name: distinctExercise.rows[i].name });
+        const setInsert = await dbPool.query(`SELECT reps, weight, session_order FROM sets WHERE session_id = ${sessionId} AND exercise_id = ${distinctExercise.rows[i].exercise_id} ORDER by session_order`);
+        // console.log('SET INSERT: ', setInsert.rows);
+        payload.exercises[i].sets = setInsert.rows;
+      }
+    }
+    console.log('PAYLOAD: ', payload);
+    return res.send(payload);
+    // return res.send({ split: splitName, sessionId: sessionId, exercises: exercises });
   },
 
   startSession: async (req, res) => {
@@ -146,6 +170,26 @@ module.exports = {
     console.log('stop date: ', isoDate);
     const stopQuery = `UPDATE sessions SET end_date = '${isoDate}' WHERE end_date IS NULL AND user_id = ${req.body.userId}`;
     await dbPool.query(stopQuery);
+    res.sendStatus(201);
+  },
+
+  submitSet: async (req, res) => {
+    const { userId, reps, weight, exercise } = req.body;
+    // console.log('SUBMIT SET BODY: ', req.body);
+    const exerciseQuery = await dbPool.query(`SELECT id FROM exercises WHERE name = '${exercise}' AND user_id = ${userId}`);
+    const exerciseId = exerciseQuery.rows[0].id;
+    const sessionQuery = `SELECT id FROM sessions WHERE end_date IS NULL AND user_id = ${userId}`;
+    const unfinishedSession = await dbPool.query(sessionQuery);
+    const sessionId = unfinishedSession.rows[0].id;
+    const orderQuery = `SELECT session_order FROM sets WHERE session_id = ${sessionId} ORDER BY session_order DESC LIMIT 1`;
+    const order = await dbPool.query(orderQuery);
+    let lastOrder = 0;
+    if (order.rows[0]) {
+      lastOrder = order.rows[0].session_order;
+    }
+    // const lastOrder = order.rows[0].session_order || 0;
+    const setQuery = `INSERT INTO sets(exercise_id, session_id, reps, weight, session_order) VALUES(${exerciseId}, ${sessionId}, ${reps}, ${weight}, ${lastOrder + 1})`;
+    await dbPool.query(setQuery);
     res.sendStatus(201);
   },
 
