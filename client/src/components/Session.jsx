@@ -5,15 +5,19 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { UserContext } from '../AppContext';
 import DateMenu from './DateMenu';
+import ListExercise from './ListExercise';
 import LoggedExercise from './LoggedExercise';
 
 function Session() {
-  const { username, id, splits, single_exercise, single_split } = useContext(UserContext);
+  const { username, id, splits, exercises, single_exercise, single_split } = useContext(UserContext);
   const [user] = username;
-  const [userId] = id
+  const [userId] = id;
   const [allSplits] = splits;
+  const [allExercises] = exercises;
   const [currentSplit, setCurrentSplit] = single_split;
   const [, setCurrentExercise] = single_exercise;
+  const [relatedExercises, setRelatedExercises] = useState([]);
+  const [unrelatedExercises, setUnrelatedExercises] = useState([]);
   const [sessionExercises, setSessionExercises] = useState([]);
   const [loggedExercises, setLoggedExercises] = useState([]);
   const [startDate, setStartDate] = useState(dayjs(new Date()));
@@ -59,8 +63,12 @@ function Session() {
     .catch((err) => { console.log('STOP SESSION ERROR: ', err)});
 
   const getSplitExercises = () => axios.post('/splitexercises', { currentSplit: currentSplit })
-    .then((result) => {console.log('SPLIT EXERCISES: ', result);
-      setSessionExercises(result.data.map((exercise) => exercise.name));
+    .then((result) => {console.log('SPLIT EXERCISES: ', result.data);
+      setRelatedExercises(result.data.map((exercise) => exercise.name));
+      // console.log('relatedExercises :', relatedExercises)
+      // const unrelatedExercises = allExercises.filter((exercise) => relatedExercises.indexOf(exercise) === -1)
+      // console.log('unrelatedExercises :', unrelatedExercises);
+      // setSessionExercises(relatedExercises.concat(unrelatedExercises));
     })
     .catch((err) => {console.log('GET SPLIT EXERCISE ERR: ', err)});
 
@@ -73,6 +81,8 @@ function Session() {
   }, [currentSplit]);
   useEffect(() => {console.log('Logged: ', loggedExercises)}, [loggedExercises])
   useEffect(() => {getSession()}, [userId])
+  useEffect(() => {setUnrelatedExercises(allExercises.filter((exercise) => relatedExercises.indexOf(exercise) === -1))}, [relatedExercises])
+  useEffect(() => {setSessionExercises(relatedExercises.concat(unrelatedExercises))}, [relatedExercises, unrelatedExercises]);
   return (
     <Box sx={blackBorderSX}>
       <br></br>
@@ -109,9 +119,12 @@ function Session() {
             </ListSubheader>
           )}
           {sessionExercises && sessionExercises.map((exercise) => (
-            <ListItemButton key={exercise} onClick={addExercise}>
-              <ListItemText>{exercise}</ListItemText>
-            </ListItemButton>
+            <ListExercise
+              key={exercise}
+              exercise={exercise}
+              addExercise={addExercise}
+              relatedExercises={relatedExercises}
+            />
           ))}
         </List>
         <Button onClick={stopSession}>Finish Workout Session</Button>
